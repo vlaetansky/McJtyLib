@@ -110,19 +110,21 @@ public class FluidTools {
         Material material = blockstate.getMaterial();
         Fluid fluid = fluidstate.getType();
 
-        if (blockstate.getBlock() instanceof IBucketPickupHandler && fluid != Fluids.EMPTY) {
-            FluidStack stack = new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME);
-            if (action.test(stack)) {
-                return new FluidStack(((IBucketPickupHandler) blockstate.getBlock()).takeLiquid(world, pos, blockstate), FluidAttributes.BUCKET_VOLUME);
-            }
-            return stack;
-        } else if (blockstate.getBlock() instanceof FlowingFluidBlock) {
+        if (blockstate.getBlock() instanceof FlowingFluidBlock) {
             FluidStack stack = new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME);
             if (action.test(stack)) {
                 clearBlock.run();
             }
             return stack;
-        } else if (material == Material.WATER_PLANT || material == Material.REPLACEABLE_WATER_PLANT) {
+        }
+        else if (blockstate.getBlock() instanceof IBucketPickupHandler && fluid != Fluids.EMPTY) {
+                FluidStack stack = new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME);
+                if (action.test(stack)) {
+                    return new FluidStack(((IBucketPickupHandler) blockstate.getBlock()).takeLiquid(world, pos, blockstate), FluidAttributes.BUCKET_VOLUME);
+                }
+                return stack;
+        }
+        else if (material == Material.WATER_PLANT || material == Material.REPLACEABLE_WATER_PLANT) {
             FluidStack stack = new FluidStack(Fluids.WATER, FluidAttributes.BUCKET_VOLUME);
             if (action.test(stack)) {
                 TileEntity tileentity = blockstate.getBlock().hasTileEntity(blockstate) ? world.getBlockEntity(pos) : null;
